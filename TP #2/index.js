@@ -176,6 +176,12 @@ var lettre = function(mot){
 };
 //**On crée notre de base de mémoire
 var memoire = Array(0) ;
+//index 0 : titre
+//index 1 : id
+//index 2 : dateDebut
+//index 3 : dateFin
+//index 4 : heureDebut
+//index 5 : heureFin
 
 // Crée un sondage à partir des informations entrées
 //
