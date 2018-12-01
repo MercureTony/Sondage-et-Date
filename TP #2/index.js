@@ -132,12 +132,53 @@ var getResults = function (sondageId) {
     return 'Resultats du sondage <b>' + sondageId + '</b> (TODO)';
 };
 
+//**Procédure qui nous permet de déterminer la validité de chaque
+//**élémennt de l'id du sondage
+var lettre = function(mot){
+  for (var i = 0; i < mot.length; i++) {
+   var position = mot.charAt(i);
+   if (position >= 0 ||(position>="a" && position<="z") ||
+      (position>="A" || position<="Z")) {
+     continue;
+   }
+   else if (position == "-") {
+     continue;
+   }
+   else {
+     return false;
+   }
+  }
+};
+//**On crée notre de base de mémoire
+var memoire = Array(0) ;
+
 // Crée un sondage à partir des informations entrées
 //
 // Doit retourner false si les informations ne sont pas valides, ou
 // true si le sondage a été créé correctement.
 var creerSondage = function(titre, id, dateDebut, dateFin, heureDebut, heureFin) {
-    // TODO
+    //**On met les paramètres dans le format adéquat
+    id = id+"";
+    titre = titre+"";
+    dateDebut = +dateDebut;
+    dateFin = +dateFin;
+    heureDebut = +heureDebut;
+    heureFin = +heureFin;
+    //**On utilise la Procédure lettre pour vérifier la validité de id
+    lettre(id);
+    //**On vérifie le bon agencement des dates et heures
+    if ((heureDebut>heureFin)&&(dateDebut>dateFin)&&(dateFin-dateDebut>30)) {
+      return false;
+    }
+    else {
+      continue;
+    }
+    //On crée un tableau contenant les informations relatives 
+    var donnee = [titre,id,dateDebut,dateFin,heureDebut,heureFin];
+    memoire.push(Array(0));
+    for (var i = 0; i < donnee.length; i++) {
+        memoire[(memoire.length)-1].push(donnee[i]);
+    }
     return true;
 };
 
