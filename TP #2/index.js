@@ -119,8 +119,33 @@ var MILLIS_PAR_JOUR = (24 * 60 * 60 * 1000);
 //
 // Doit retourner false si le calendrier demandé n'existe pas
 var getCalendar = function (sondageId) {
-    // TODO
-    return 'Calendrier <b>' + sondageId + '</b> (TODO)';
+   var texte = "";
+   for (var i = 0; i < memoire.length; i++) {
+     if (memoire[i][1] == sondageId) {
+        var titre = memoire[i][0];
+     }
+   }
+   texte += "<!doctype html>\n<head>\n<title>"+titre+"</title>\n";
+   texte += "<meta charset=\"utf-8\" />\n";
+   texte += "<link rel=\"stylesheet\" type=\"text/css\" href=\"/calendar.css\"/>\n";
+   texte += "<script src=\"/calendar.js\"></script>\n</head>\n<body>\n";
+   texte += "<h1>"+titre+"</h1>\n";
+
+  // TODO: Création d'un tableau
+
+  texte += "<form id=\"soumettre\" action=\"\" method=\"GET\">\n";
+  // OPTIMIZE: more than 80 carac
+  texte += "<label>\nNom:\n<input id=\"nom\" name=\"nom\" type=\"text\" required />\n";
+  // OPTIMIZE: more than 80 carac
+  texte += "</label>\n\n<input id=\"disponibilites\" name=\"disponibilites\" type=\"hidden\" />\n\n";
+  // OPTIMIZE: more than 80 carac
+  texte += "<button type=\"submit\" onclick=\"document.getElementById('disponibilites').value = compacterDisponibilites()\">\n";
+  texte += "Participer\n</button>\n</form>\n\n";
+  // OPTIMIZE: more than 80 carac
+  texte += "<p id=\"partager\">Partagez ce sondage en utilisant le lien suivant :"+hostUrl+sondageId+"</p>\n";
+  texte += "</body>\n</html>";
+
+  return texte;
 };
 
 // Retourne le texte HTML à afficher à l'utilisateur pour voir les
@@ -170,10 +195,7 @@ var creerSondage = function(titre, id, dateDebut, dateFin, heureDebut, heureFin)
     if ((heureDebut>heureFin)&&(dateDebut>dateFin)&&(dateFin-dateDebut>30)) {
       return false;
     }
-    else {
-      continue;
-    }
-    //On crée un tableau contenant les informations relatives 
+    //On crée un tableau contenant les informations relatives
     var donnee = [titre,id,dateDebut,dateFin,heureDebut,heureFin];
     memoire.push(Array(0));
     for (var i = 0; i < donnee.length; i++) {
