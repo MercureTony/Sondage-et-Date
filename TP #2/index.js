@@ -183,6 +183,7 @@ var memoire = Array(0) ;
 // true si le sondage a été créé correctement.
 var creerSondage = function(titre, id, dateDebut, dateFin, heureDebut, heureFin) {
     //**On met les paramètres dans le format adéquat
+    // !!! Figure out the value of the date and hour !!!
     id = id+"";
     titre = titre+"";
     dateDebut = +dateDebut;
