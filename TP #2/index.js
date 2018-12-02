@@ -140,26 +140,26 @@ var getCalendar = function(sondageId) {
     }
   }
   //génération du contenu du code HTML à afficher
-  texte += "<!doctype html>\n<head>\n<title>" + titre + "</title>\n";
-  texte += "<meta charset=\"utf-8\" />\n";
-  texte += "<link rel='stylesheet' type='text/css' href='/calendar.css'/>\n";
-  texte += "<script src=\"/calendar.js\"></script>\n</head>\n<body>\n";
-  texte += "<h1>" + titre + "</h1>\n";
+  texte += "<!doctype html>\n<head>\n<title>" + titre + "</title>\n" +
+    "<meta charset='utf-8' />\n" +
+    "<link rel='stylesheet' type='text/css' href='/calendar.css'/>\n" +
+    "<script src='/calendar.js'></script>\n</head>\n<body>\n" +
+    "<h1>" + titre + "</h1>\n" +
 
-  // TODO: Création d'un tableau
+    // TODO: Création d'un tableau
 
-  texte += "<form id=\"soumettre\" action=\"\" method=\"GET\">\n";
-  texte += "<label>\nNom:\n"
-  texte += "<input id=\"nom\" name=\"nom\" type=\"text\" required />\n";
-  texte += "</label>\n\n<input id=\"disponibilites\" name=\"disponibilites\""
-  texte += "type=\"hidden\" />\n\n";
-  texte += "<button type='submit' onclick=\""
-  texte += "document.getElementById('disponibilites').value ="
-  texte += "compacterDisponibilites()\">\n";
-  texte += "Participer\n</button>\n</form>\n\n";
-  texte += "<p id='partager'>Partagez ce sondage en utilisant le lien suivant"
-  texte += " :" + hostUrl + id + "</p>\n";
-  texte += "</body>\n</html>\n";
+    "<form id='soumettre' action=' method='GET'>\n" +
+    "<label>\nNom:\n" +
+    "<input id='nom' name='nom' type='text' required />\n" +
+    "</label>\n\n<input id='disponibilites' name='disponibilites'" +
+    "type='hidden' />\n\n" +
+    "<button type='submit' onclick='" +
+    "document.getElementById('disponibilites').value =" +
+    "compacterDisponibilites()'>\n" +
+    "Participer\n</button>\n</form>\n\n" +
+    "<p id='partager'>Partagez ce sondage en utilisant le lien suivant" +
+    " :" + hostUrl + id + "</p>\n" +
+    "</body>\n</html>\n";
 
   return texte;
 };
@@ -199,7 +199,7 @@ var creerSondage = function(titre, id, dateDebut, dateFin, heureDebut, heureFin)
   //**On utilise la procédure lettre pour vérifier la validité de
   if (!lettre(id)) {
     return false;
-  };
+  }
   //**On vérifie le bon agencement des dates et heures
   if ((heureDebut > heureFin) && (dateDebut > dateFin) &&
     (dateFin - dateDebut > 30)) {
