@@ -161,18 +161,18 @@ var getResults = function (sondageId) {
 //**élémennt de l'id du sondage
 var lettre = function(mot){
   for (var i = 0; i < mot.length; i++) {
-   var position = mot.charAt(i);
-   if (position >= 0 ||(position>="a" && position<="z") ||
-      (position>="A" && position<="Z")) {
-     continue;
+    var position = mot.charAt(i);
+    if (position >= 0 ||(position>="a" && position<="z") ||
+       (position>="A" && position<="Z")) {
+      continue;
+    }
+    else if (position == "-") {
+      continue;
+    }
+    else {
+      return false;
+    }
    }
-   else if (position == "-") {
-     continue;
-   }
-   else {
-     return false;
-   }
-  }
 };
 //**On crée notre Objet
 var memoire = Array(0) ;
@@ -183,7 +183,10 @@ var memoire = Array(0) ;
 // true si le sondage a été créé correctement.
 var creerSondage = function(titre, id, dateDebut, dateFin, heureDebut, heureFin) {
     //**On utilise la procédure lettre pour vérifier la validité de id
-    lettre(id);
+    id += "";
+    if(lettre(id)){
+      return  false;
+    };
     //**On vérifie le bon agencement des dates et heures
     if ((heureDebut > heureFin) && (dateDebut > dateFin ) &&
         (dateFin - dateDebut > 30)) {
