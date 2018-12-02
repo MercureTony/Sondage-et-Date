@@ -161,7 +161,7 @@ var lettre = function(mot){
   for (var i = 0; i < mot.length; i++) {
    var position = mot.charAt(i);
    if (position >= 0 ||(position>="a" && position<="z") ||
-      (position>="A" || position<="Z")) {
+      (position>="A" && position<="Z")) {
      continue;
    }
    else if (position == "-") {
