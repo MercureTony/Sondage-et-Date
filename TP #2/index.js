@@ -121,8 +121,10 @@ var MILLIS_PAR_JOUR = (24 * 60 * 60 * 1000);
 var getCalendar = function (sondageId) {
    var texte = "";
    for (var i = 0; i < memoire.length; i++) {
-     if (memoire[i][1] == sondageId) {
-        var titre = memoire[i][0];
+     if (memoire[i].id == sondageId) {
+        var titre = memoire[i].titre;
+        var date = memoire[i].date;
+        var id = memoire[i].id;
      }
    }
    texte += "<!doctype html>\n<head>\n<title>"+titre+"</title>\n";
@@ -134,16 +136,12 @@ var getCalendar = function (sondageId) {
   // TODO: Création d'un tableau
 
   texte += "<form id=\"soumettre\" action=\"\" method=\"GET\">\n";
-  // OPTIMIZE: more than 80 carac
   texte += "<label>\nNom:\n<input id=\"nom\" name=\"nom\" type=\"text\" required />\n";
-  // OPTIMIZE: more than 80 carac
   texte += "</label>\n\n<input id=\"disponibilites\" name=\"disponibilites\" type=\"hidden\" />\n\n";
-  // OPTIMIZE: more than 80 carac
   texte += "<button type=\"submit\" onclick=\"document.getElementById('disponibilites').value = compacterDisponibilites()\">\n";
   texte += "Participer\n</button>\n</form>\n\n";
-  // OPTIMIZE: more than 80 carac
-  texte += "<p id=\"partager\">Partagez ce sondage en utilisant le lien suivant :"+hostUrl+sondageId+"</p>\n";
-  texte += "</body>\n</html>";
+  texte += "<p id=\"partager\">Partagez ce sondage en utilisant le lien suivant :"+hostUrl+id+"</p>\n";
+  texte += "</body>\n</html>\n";
 
   return texte;
 };
@@ -174,14 +172,8 @@ var lettre = function(mot){
    }
   }
 };
-//**On crée notre de base de mémoire
+//**On crée notre dictionnaire
 var memoire = Array(0) ;
-//index 0 : titre
-//index 1 : id
-//index 2 : dateDebut
-//index 3 : dateFin
-//index 4 : heureDebut
-//index 5 : heureFin
 
 // Crée un sondage à partir des informations entrées
 //
@@ -189,25 +181,30 @@ var memoire = Array(0) ;
 // true si le sondage a été créé correctement.
 var creerSondage = function(titre, id, dateDebut, dateFin, heureDebut, heureFin) {
     //**On met les paramètres dans le format adéquat
-    // !!! Figure out the value of the date and hour !!!
+    // OPTIMIZE: figure what's the value of the date et hour
     id = id+"";
     titre = titre+"";
     dateDebut = +dateDebut;
     dateFin = +dateFin;
     heureDebut = +heureDebut;
     heureFin = +heureFin;
-    //**On utilise la Procédure lettre pour vérifier la validité de id
+    //**On utilise la procédure lettre pour vérifier la validité de id
     lettre(id);
     //**On vérifie le bon agencement des dates et heures
     if ((heureDebut>heureFin)&&(dateDebut>dateFin)&&(dateFin-dateDebut>30)) {
       return false;
     }
     //On crée un tableau contenant les informations relatives
-    var donnee = [titre,id,dateDebut,dateFin,heureDebut,heureFin];
-    memoire.push(Array(0));
-    for (var i = 0; i < donnee.length; i++) {
-        memoire[(memoire.length)-1].push(donnee[i]);
-    }
+    memoire.push(
+      {
+      titre : titre,
+      id : id,
+      dateDebut:dateDebut,
+      dateFin:dateFin,
+      heureDebut:heureDebut,
+      heureFin:heureFin}
+    )
+
     return true;
 };
 
