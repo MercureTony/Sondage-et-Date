@@ -182,7 +182,6 @@ var memoire = Array(0) ;
 var creerSondage = function(titre, id, dateDebut, dateFin, heureDebut, heureFin) {
     //**On met les paramètres dans le format adéquat
     // OPTIMIZE: figure what's the value of the date et hour
-    id = id+"";
     titre = titre+"";
     dateDebut = +dateDebut;
     dateFin = +dateFin;
