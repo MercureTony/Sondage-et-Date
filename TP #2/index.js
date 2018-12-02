@@ -119,14 +119,16 @@ var MILLIS_PAR_JOUR = (24 * 60 * 60 * 1000);
 //
 // Doit retourner false si le calendrier demandé n'existe pas
 var getCalendar = function (sondageId) {
+  //création du contenant html
    var texte = "";
+  //on parcoure les dictionnaires afin de trouver le id du sondage
    for (var i = 0; i < memoire.length; i++) {
      if (memoire[i].id == sondageId) {
         var titre = memoire[i].titre;
-        var date = memoire[i].date;
         var id = memoire[i].id;
      }
    }
+  //génération du contenu du code HTML à afficher
    texte += "<!doctype html>\n<head>\n<title>"+titre+"</title>\n";
    texte += "<meta charset=\"utf-8\" />\n";
    texte += "<link rel=\"stylesheet\" type=\"text/css\" href=\"/calendar.css\"/>\n";
@@ -172,7 +174,7 @@ var lettre = function(mot){
    }
   }
 };
-//**On crée notre dictionnaire
+//**On crée notre Objet
 var memoire = Array(0) ;
 
 // Crée un sondage à partir des informations entrées
@@ -180,17 +182,11 @@ var memoire = Array(0) ;
 // Doit retourner false si les informations ne sont pas valides, ou
 // true si le sondage a été créé correctement.
 var creerSondage = function(titre, id, dateDebut, dateFin, heureDebut, heureFin) {
-    //**On met les paramètres dans le format adéquat
-    // OPTIMIZE: figure what's the value of the date et hour
-    titre = titre+"";
-    dateDebut = +dateDebut;
-    dateFin = +dateFin;
-    heureDebut = +heureDebut;
-    heureFin = +heureFin;
     //**On utilise la procédure lettre pour vérifier la validité de id
     lettre(id);
     //**On vérifie le bon agencement des dates et heures
-    if ((heureDebut>heureFin)&&(dateDebut>dateFin)&&(dateFin-dateDebut>30)) {
+    if ((heureDebut > heureFin) && (dateDebut > dateFin ) &&
+        (dateFin - dateDebut > 30)) {
       return false;
     }
     //On crée un tableau contenant les informations relatives
