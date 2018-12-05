@@ -221,8 +221,42 @@ var ajouterParticipant = function(sondageId, nom, disponibilites) {
 // commence en rouge, qui passe par toutes les autres couleurs et qui
 // revient à rouge.
 var genColor = function(i, nbTotal) {
-  // TODO
-  return '#000000';
+  
+  var teinte = i / nbTotal * 360;
+  var h = teinte / 60, c = 0.7;
+  var x = c * (1 - Math.abs(h % 2 - 1));
+
+  var couleur = [];
+  switch (Math.floor(h)) {
+    case 0:
+      couleur = [c, x, 0];
+      break;
+    case 1:
+      couleur = [x, c, 0];
+      break;
+    case 2:
+      couleur = [0, c, x];
+      break;
+    case 3:
+      couleur = [0, x, c];
+      break;
+    case 4:
+      couleur = [x, 0, c];
+      break;
+    case 5:
+      couleur = [c, 0, x];
+      break;
+    default:
+      couleur = [0, 0, 0];
+  }
+
+  // Convertir en hexadecimal
+  var hexCode = "#";
+  for (var j = 0; j < couleur.length; j++) {
+    hexCode += couleur[j].toString(16);
+  }
+
+  return hexCode;
 };
 
 
