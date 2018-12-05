@@ -173,33 +173,19 @@ var getResults = function(sondageId) {
   return 'Resultats du sondage <b>' + sondageId + '</b> (TODO)';
 };
 
-//**Procédure qui nous permet de déterminer la validité de chaque
-//**élémennt de l'id du sondage
-var lettre = function(mot) {
-  for (var i = 0; i < mot.length; i++) {
-    var position = mot.charAt(i);
-    if (position >= 0 || (position >= "a" && position <= "z") ||
-      (position >= "A" && position <= "Z")) {
-      continue;
-    } else if (position == "-") {
-      continue;
-    } else {
-      return false;
-    }
-  }
-};
-//**On crée notre Objet
-var memoire = Array(0);
+var memoire = [];
 
 // Crée un sondage à partir des informations entrées
 //
 // Doit retourner false si les informations ne sont pas valides, ou
 // true si le sondage a été créé correctement.
 var creerSondage = function(titre, id, dateDebut, dateFin, heureDebut, heureFin) {
-  //**On utilise la procédure lettre pour vérifier la validité de
-  if (!lettre(id)) {
+
+  // Validité de l'id
+  if (!/[a-zA-Z0-9\-]+/.test(id)) {
     return false;
   }
+
   //**On vérifie le bon agencement des dates et heures
   if ((heureDebut > heureFin) && (dateDebut > dateFin) &&
     (dateFin - dateDebut > 30)) {
@@ -213,7 +199,7 @@ var creerSondage = function(titre, id, dateDebut, dateFin, heureDebut, heureFin)
     dateFin: dateFin,
     heureDebut: heureDebut,
     heureFin: heureFin
-  })
+  });
 
   return true;
 };
