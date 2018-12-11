@@ -119,8 +119,7 @@ var getIndex = function(replacements) {
 // --- À compléter ---
 
 /*
- * Replace-all on a string
- *
+ * Replace-all on a string - uses global Regex
  * Meant for variables in HTML templates
  *
  * @param {String} text The text to search through
@@ -146,18 +145,82 @@ var MILLIS_PAR_JOUR = (24 * 60 * 60 * 1000);
 var getCalendar = function(sondageId) {
 
   // On parcoure les dictionnaires afin de trouver le id du sondage
-  var titre = "", id = "";
+  var titre, id, dateDebut, dateFin, heureDebut, heureFin;
+
   for (var i = 0; i < memoire.length; i++) {
     if (memoire[i].id == sondageId) {
       titre = memoire[i].titre;
-      id += memoire[i].id;
+      id = memoire[i].id + "";
+      dateDebut = memoire[i].dateDebut;
+      dateFin = memoire[i].dateFin;
+      heureDebut = memoire[i].heureDebut;
+      heureFin = memoire[i].heureFin;
     }
   }
+
+  if (!id) return false;
 
   var texte = readFile('template/calendar.html');
   texte = varReplace(texte, "{{titre}}", titre);
   texte = varReplace(texte, "{{url}}", hostUrl + id);
+
+  // Get table
+  var table = getCalendarTable(dateDebut, dateFin, heureDebut, heureFin);
+  texte = varReplace(texte, "{{tableau}}", table);
+
   return texte;
+};
+
+/*
+ * Create calendar table
+ * For use in getCalendar()
+ *
+ * @param {Date} debut Start date
+ * @param {Date} fin End date
+ * @param {Int} matin Starting hour
+ * @param {Int} soir Ending hour
+ * @return {String} HTML table of calendar
+ */
+var getCalendarTable = function(debut, fin, matin, soir) {
+
+  var table = `
+<table id="calendrier"
+\tonmousedown="onClick(event)"
+\tonmouseover="onMove(event)"
+\tdata-nbjours="{{nbJours}}"
+\tdata-nbheures="{{nbHeures}}">
+\t<!-- En-tête -->
+\t<tr>
+\t\t<th></th>
+`;
+
+  // https://stackoverflow.com/questions/4345045 - Loop dates
+  // Add date headers - nbDays for use in availability cells
+  var nbDays = 0;
+  for (var d = debut; d <= fin; d.setDate(d.getDate() + 1)) {
+    table += "\t\t<th>" + d.getDate() + " " + mois[d.getMonth()] + "</th>\n";
+    nbDays++;
+  }
+
+  table += "\t</tr>\n";
+
+  // Add hour cells
+  for (var h = matin; h <= soir; h++) {
+    table += "\t<tr>\n\t\t<th>" + h + "h</th>\n"; // Heure
+
+    for (var c = 0; c < nbDays; c++) {
+      table += "\t\t<td id='" + c + "-" + h + "'></td>\n";
+    }
+    table += "\t</tr>\n";
+  }
+
+  table += "</table>";
+
+  // Mettre les bons variables comme attributs
+  table = table.replace("{{nbJours}}", nbDays);
+  table = table.replace("{{nbHeures}}", soir - matin + 1);
+
+  return table;
 };
 
 // Retourne le texte HTML à afficher à l'utilisateur pour voir les
@@ -191,8 +254,8 @@ var creerSondage = function(titre, id, dateDebut, dateFin, heureDebut, heureFin)
   memoire.push({
     titre: titre,
     id: id,
-    dateDebut: dateDebut,
-    dateFin: dateFin,
+    dateDebut: Date(dateDebut),
+    dateFin: Date(dateFin),
     heureDebut: heureDebut,
     heureFin: heureFin
   });
