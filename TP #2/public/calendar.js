@@ -5,9 +5,13 @@ document.addEventListener('DOMContentLoaded', function() {
     // la page
 });
 
-function onClick(event) {
-    // TODO
+var cal = document.getElementById("calendrier");
+var nbHeures = cal.dataset.nbheures;
+var nbJours = cal.dataset.nbjours;
 
+var selected = [];
+
+function onClick(event) {
     /* La variable t contient l'élément HTML sur lequel le clic a été
        fait. Notez qu'il ne s'agit pas forcément d'une case <td> du
        tableau */
@@ -15,6 +19,21 @@ function onClick(event) {
 
     // Attribut id de l'élément sur lequel le clic a été fait
     var id = t.id;
+
+    // 2x parent element pour avoir le <table
+    if (t.parentElement.parentElement.id == 'calendrier') {
+
+        // De-select
+        if (t.innerText == "✓") {
+            t.innerText = "";
+
+            var eIndex = selected.indexOf(id);
+            if (eIndex !== -1) selected.splice(eIndex, 1);
+        } else {
+            t.innerText = "✓";
+            selected.push(id);
+        }
+    }
 }
 
 function onMove(event) {
@@ -25,7 +44,15 @@ function onMove(event) {
 }
 
 var compacterDisponibilites = function() {
-    // TODO
+    var binaire = "";
 
-    return '0000000';
+    for (var i = 0; i < nbJours; i++) {
+        for (var j = 0; j < nbHeures; j++) {
+            if (selected.indexOf(i + "-" + j) == -1) {
+                binaire += "0";
+            } else binaire += "1";
+        }
+    }
+
+    return binaire;
 };

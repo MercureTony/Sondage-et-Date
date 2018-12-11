@@ -205,7 +205,8 @@ var getCalendarTable = function(debut, fin, matin, soir) {
   table += "\t</tr>\n";
 
   // Add hour cells
-  for (var h = matin; h <= soir; h++) {
+  var nbHeures = soir - matin + 1;
+  for (var h = 0; h < nbHeures; h++) {
     table += "\t<tr>\n\t\t<th>" + h + "h</th>\n"; // Heure
 
     for (var c = 0; c < nbDays; c++) {
@@ -218,7 +219,7 @@ var getCalendarTable = function(debut, fin, matin, soir) {
 
   // Mettre les bons variables comme attributs
   table = table.replace("{{nbJours}}", nbDays);
-  table = table.replace("{{nbHeures}}", soir - matin + 1);
+  table = table.replace("{{nbHeures}}", nbHeures);
 
   return table;
 };
@@ -254,8 +255,8 @@ var creerSondage = function(titre, id, dateDebut, dateFin, heureDebut, heureFin)
   memoire.push({
     titre: titre,
     id: id,
-    dateDebut: Date(dateDebut),
-    dateFin: Date(dateFin),
+    dateDebut: new Date(dateDebut),
+    dateFin: new Date(dateFin),
     heureDebut: heureDebut,
     heureFin: heureFin
   });
