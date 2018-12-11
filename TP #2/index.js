@@ -118,6 +118,20 @@ var getIndex = function(replacements) {
 
 // --- À compléter ---
 
+/*
+ * Replace-all on a string
+ *
+ * Meant for variables in HTML templates
+ *
+ * @param {String} text The text to search through
+ * @param {String} find The placeholder
+ * @param {String} replace The proper value to use for the placeholder
+ * @return {String} The text with values for the placeholder
+ */
+var varReplace = function(text, find, replace) {
+  return text.replace(new RegExp(find, 'g'), replace);
+};
+
 var mois = [
   'Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin',
   'Juil', 'Août', 'Sep', 'Oct', 'Nov', 'Dec'
@@ -130,21 +144,20 @@ var MILLIS_PAR_JOUR = (24 * 60 * 60 * 1000);
 //
 // Doit retourner false si le calendrier demandé n'existe pas
 var getCalendar = function(sondageId) {
-  //création du contenant html
-  var texte = "";
-  //on parcoure les dictionnaires afin de trouver le id du sondage
+
+  // On parcoure les dictionnaires afin de trouver le id du sondage
+  var titre = "", id = "";
   for (var i = 0; i < memoire.length; i++) {
     if (memoire[i].id == sondageId) {
-      var titre = memoire[i].titre;
-      var id = memoire[i].id;
+      titre = memoire[i].titre;
+      id += memoire[i].id;
     }
   }
-  var regex = /{{titre}}/g
-  texte = readFile('template/calendar.html');
-  texte = texte.replace(regex,titre);
-  texte = texte.replace("{{url}}",hostUrl+id);
-  return texte ;
 
+  var texte = readFile('template/calendar.html');
+  texte = varReplace(texte, "{{titre}}", titre);
+  texte = varReplace(texte, "{{url}}", hostUrl + id);
+  return texte;
 };
 
 // Retourne le texte HTML à afficher à l'utilisateur pour voir les
