@@ -139,29 +139,12 @@ var getCalendar = function(sondageId) {
       var id = memoire[i].id;
     }
   }
-  //génération du contenu du code HTML à afficher
-  texte += "<!doctype html>\n<head>\n<title>" + titre + "</title>\n" +
-    "<meta charset='utf-8' />\n" +
-    "<link rel='stylesheet' type='text/css' href='/calendar.css'/>\n" +
-    "<script src='/calendar.js'></script>\n</head>\n<body>\n" +
-    "<h1>" + titre + "</h1>\n" +
+  var regex = /{{titre}}/g
+  texte = readFile('template/calendar.html');
+  texte = texte.replace(regex,titre);
+  texte = texte.replace("{{url}}",hostUrl+id);
+  return texte ;
 
-    // TODO: Création d'un tableau
-
-    "<form id='soumettre' action=' method='GET'>\n" +
-    "<label>\nNom:\n" +
-    "<input id='nom' name='nom' type='text' required />\n" +
-    "</label>\n\n<input id='disponibilites' name='disponibilites'" +
-    "type='hidden' />\n\n" +
-    "<button type='submit' onclick='" +
-    "document.getElementById('disponibilites').value =" +
-    "compacterDisponibilites()'>\n" +
-    "Participer\n</button>\n</form>\n\n" +
-    "<p id='partager'>Partagez ce sondage en utilisant le lien suivant" +
-    " :" + hostUrl + id + "</p>\n" +
-    "</body>\n</html>\n";
-
-  return texte;
 };
 
 // Retourne le texte HTML à afficher à l'utilisateur pour voir les
@@ -221,7 +204,7 @@ var ajouterParticipant = function(sondageId, nom, disponibilites) {
 // commence en rouge, qui passe par toutes les autres couleurs et qui
 // revient à rouge.
 var genColor = function(i, nbTotal) {
-  
+
   var teinte = i / nbTotal * 360;
   var h = teinte / 60, c = 0.7;
   var x = c * (1 - Math.abs(h % 2 - 1));
