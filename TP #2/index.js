@@ -239,7 +239,8 @@ var memoire = [];
 //
 // Doit retourner false si les informations ne sont pas valides, ou
 // true si le sondage a été créé correctement.
-var creerSondage = function(titre, id, dateDebut, dateFin, heureDebut, heureFin) {
+var creerSondage = function(titre, id, dateDebut, dateFin,
+  heureDebut, heureFin) {
 
   // Validité de l'id
   if (!/[a-zA-Z0-9\-]+/.test(id)) {
@@ -272,9 +273,10 @@ var dispo = [];
 // Cette fonction ne retourne rien
 var ajouterParticipant = function(sondageId, nom, disponibilites) {
 
+  var id;
   for (var i = 0; i < memoire.length; i++) {
     if (memoire[i].id == sondageId) {
-      var id = memoire[i].id + "";
+      id = memoire[i].id + "";
     }
   }
 
