@@ -259,7 +259,8 @@ var creerSondage = function(titre, id, dateDebut, dateFin,
     dateDebut: new Date(dateDebut),
     dateFin: new Date(dateFin),
     heureDebut: heureDebut,
-    heureFin: heureFin
+    heureFin: heureFin,
+    disponibilite : []
   });
 
   return true;
@@ -269,7 +270,6 @@ var creerSondage = function(titre, id, dateDebut, dateFin,
 // sondage. Les disponibilités sont envoyées au format textuel
 // fourni par la fonction compacterDisponibilites() de public/calendar.js
 //
-var dispo = [];
 // Cette fonction ne retourne rien
 var ajouterParticipant = function(sondageId, nom, disponibilites) {
 
@@ -280,11 +280,9 @@ var ajouterParticipant = function(sondageId, nom, disponibilites) {
     }
   }
 
-  dispo.push({
-    id: id,
-    nom:nom,
-    disponibilites:disponibilites
-  });
+  memoire.disponibilite.push(id);
+  memoire.disponibilite.push(nom);
+  memoire.disponibilite.push(disponibilites);
 };
 
 // Génère la `i`ème couleur parmi un nombre total `total` au format
