@@ -291,6 +291,95 @@ var ajouterParticipant = function(sondageId, nom, disponibilites) {
   }
 };
 
+/*
+ * Create survey results calendar table
+ *
+ * @param {Array} sondage The event to use
+ * @return {String} HTML table displaying the results
+ */
+var resultsTable = function(sondage) {
+  var dispo = sondage.disponibilite;
+
+  var table = "<table>\n\t<tr>\n\t\t<th></th>\n";
+
+  // Add date columns
+  var dIndex = 0;
+  var debut = sondage.dateDebut, fin = sondage.dateFin;
+  for (var d = debut; d <= fin; d.setDate(d.getDate() + 1)) {
+    table += "\t\t<th>" + d.getDate() + " " + mois[d.getMonth()] + "</th>\n";
+    dIndex++;
+  }
+
+  // Get counts of availabilities
+  var dispoCounts = new Array(dispo[0].disponibilite.length);
+  for (var i = 0; i < dispo.length; i++) {
+    for (var c = 0; c < dispo[i].disponibilite.length; c++) {
+      if (typeof dispoCounts[c] == "undefined") dispoCounts[c] = 0;
+      if (dispo[i].disponibilite.charAt(c) == '1') dispoCounts[c]++;
+    }
+  }
+
+  var min = Math.min(dispoCounts);
+  var max = Math.max(dispoCounts);
+
+  // Create rows for hours
+  var hIndex = 0;
+  var nbHeures = sondage.heureFin - sondage.heureDebut + 1;
+
+  for (var h = 0; h < nbHeures; h++) {
+
+    // Create cells for day-hour combinations
+    var current = h + sondage.heureDebut;
+    table += "\t<tr>\n\t\t<th>" + current + "h</th>\n";
+
+    for (var j = 0; j < dIndex; j++) {
+      var cell = "\t\t<td";
+      var hDispo = "";
+      var hNum = 0;
+
+      for (var p = 0; p < dispo.length; p++) {
+        var couleur = genColour(p, dispo.length);
+
+        // Make coloured cases
+        if (dispo[p].disponibilite.charAt(hIndex) == "1") {
+          hDispo += "\t\t\t<span style='background-color: " +
+            couleur + "; color:" + couleur + "'>.</span>\n";
+          hNum++;
+        }
+      }
+      hIndex++;
+
+      // Add cases to cell
+      if (hNum == max) cell += " class='max";
+      else if (hNum == min) cell += " class='min";
+      else { cell += "></td>\n"; continue; }
+
+      // Add availabilities
+      cell += "'>\n" + hDispo + "\t\t</td>\n";
+    }
+    table += "\t</tr>";
+  }
+  return table + "</table>";
+};
+
+/*
+ * Create a legend for the survey's respondants
+ *
+ * @param {Array} dispo The survey's availabilities array
+ * @return {String} The HTML to for the legend
+ */
+var getLegend = function(dispo) {
+  var html = "<ul>\n";
+
+  for (var i = 0; i < dispo.length; i++) {
+    html += "\t<li style='background-color: " +
+      genColour(i, dispo.length) + "'>" + dispo[i].nom + "</li>\n";
+  }
+
+  return html + "</ul>";
+};
+
+
 // Génère la `i`ème couleur parmi un nombre total `total` au format
 // hexadécimal HTML
 //
@@ -298,7 +387,7 @@ var ajouterParticipant = function(sondageId, nom, disponibilites) {
 // toutes les couleurs et les afficher devrait donner un joli dégradé qui
 // commence en rouge, qui passe par toutes les autres couleurs et qui
 // revient à rouge.
-var genColor = function(i, nbTotal) {
+var genColour = function(i, nbTotal) {
 
   var teinte = i / nbTotal * 360;
   var h = teinte / 60, c = 0.7;
