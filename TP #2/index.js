@@ -272,11 +272,12 @@ var creerSondage = function(titre, id, dateDebut, dateFin,
 //
 // Cette fonction ne retourne rien
 var ajouterParticipant = function(sondageId, nom, disponibilites) {
- for (var i = 0; i < memoire.length; i++) {
+  for (var i = 0; i < memoire.length; i++) {
     if (memoire[i].id == sondageId) {
-      var id = memoire[i].id + "";
-      memoire[i].disponibilite.push(id);
-      memoire[i].disponibilite.push(nom);
+      memoire[i].disponibilite.push({
+        nom : nom ,
+        disponibilite : disponibilites 
+      })
     }
   }
 };
