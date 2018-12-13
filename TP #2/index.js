@@ -327,10 +327,11 @@ var genColor = function(i, nbTotal) {
       couleur = [0, 0, 0];
   }
 
-  // Convertir en hexadecimal
+  // Convert to hexadecimal
   var hexCode = "#";
   for (var j = 0; j < couleur.length; j++) {
-    hexCode += couleur[j].toString(16);
+    var newBase = Math.floor(couleur[j] * 256); // (16^2)
+    hexCode += newBase.toString(16);
   }
 
   return hexCode;
