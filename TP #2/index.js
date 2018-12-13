@@ -186,6 +186,32 @@ var getCalendar = function(sondageId) {
 };
 
 /*
+ * Make date headers for tables
+ *
+ * @param {Date} debut The starting date
+ * @param {Date} fin The end date
+ * @return {String} HTML table header cells
+ */
+var makeDateCols = function(debut, fin) {
+  var table = "";
+
+  // https://stackoverflow.com/questions/4345045 - Loop dates
+  // Add date headers - nbDays for use in availability cells
+  var nbDays = (fin.getTime() - debut.getTime()) / MILLIS_PAR_JOUR;
+
+  var dateDebut = new Date(debut).setDate(debut.getDate() + 1);
+  var dateFin = new Date(fin).setDate(fin.getDate() + 1);
+
+  for (var d = new Date(dateDebut); d <= dateFin;
+    d.setDate(d.getDate() + 1)) {
+    table += "\t\t<th>" + d.getDate() + " " + mois[d.getMonth()] +
+      "</th>\n";
+  }
+
+  return table;
+};
+
+/*
  * Create calendar table
  * For use in getCalendar()
  *
@@ -201,8 +227,6 @@ var getCalendarTable = function(sondage) {
 
   var table = `
 <table id="calendrier"
-\tonmousedown="onClick(event)"
-\tonmouseover="onMove(event)"
 \tdata-nbjours="{{nbJours}}"
 \tdata-nbheures="{{nbHeures}}">
 \t<!-- En-tête -->
@@ -210,13 +234,8 @@ var getCalendarTable = function(sondage) {
 \t\t<th></th>
 `;
 
-  // https://stackoverflow.com/questions/4345045 - Loop dates
-  // Add date headers - nbDays for use in availability cells
-  var nbDays = 0;
-  for (var d = debut; d <= fin; d.setDate(d.getDate() + 1)) {
-    table += "\t\t<th>" + d.getDate() + " " + mois[d.getMonth()] + "</th>\n";
-    nbDays++;
-  }
+  var nbDays = (fin.getTime() - debut.getTime()) / MILLIS_PAR_JOUR;
+  table += makeDateCols(debut, fin);
 
   table += "\t</tr>\n";
 
@@ -226,8 +245,9 @@ var getCalendarTable = function(sondage) {
     var current = h + matin;
     table += "\t<tr>\n\t\t<th>" + current + "h</th>\n";
 
-    for (var c = 0; c < nbDays; c++) {
-      table += "\t\t<td id='" + c + "-" + h + "'></td>\n"; // Index date-hour
+    for (var c = 0; c <= nbDays; c++) {
+      table += "\t\t<td id='" + c + "-" + h + "' onmousedown='onClick(event)'" +
+        "></td>\n"; // Index date-hour
     }
     table += "\t</tr>\n";
   }
@@ -257,10 +277,10 @@ var getResults = function(sondageId) {
   texte = varReplace(texte, "{{titre}}", sondage.titre);
 
   var table = resultsTable(sondage);
-  texte = varReplace(texte, "{{tableau}}", table);
+  texte = varReplace(texte, "{{table}}", table);
 
   var legende = getLegend(sondage.disponibilites);
-  texte = varReplace(texte,"{{legend}}",legende);
+  texte = varReplace(texte,"{{legende}}",legende);
 
   return texte;
 };
@@ -330,12 +350,9 @@ var resultsTable = function(sondage) {
   var table = "<table>\n\t<tr>\n\t\t<th></th>\n";
 
   // Add date columns
-  var dIndex = 0;
   var debut = sondage.dateDebut, fin = sondage.dateFin;
-  for (var d = debut; d <= fin; d.setDate(d.getDate() + 1)) {
-    table += "\t\t<th>" + d.getDate() + " " + mois[d.getMonth()] + "</th>\n";
-    dIndex++;
-  }
+  var nbDays = (fin.getTime() - debut.getTime()) / MILLIS_PAR_JOUR;
+  table += makeDateCols(debut, fin);
 
   // Get counts of availabilities
   var dispoCounts = new Array(dispo[0].disponibilites.length);
@@ -359,7 +376,7 @@ var resultsTable = function(sondage) {
     var current = h + sondage.heureDebut;
     table += "\t<tr>\n\t\t<th>" + current + "h</th>\n";
 
-    for (var j = 0; j < dIndex; j++) {
+    for (var j = 0; j <= nbDays; j++) {
       var cell = "\t\t<td";
       var hDispo = "";
       var hNum = 0;
@@ -377,12 +394,12 @@ var resultsTable = function(sondage) {
       hIndex++;
 
       // Add cases to cell
-      if (hNum == max) cell += " class='max";
-      else if (hNum == min) cell += " class='min";
-      else { cell += "></td>\n"; continue; }
+      if (hNum == max) cell += " class='max'>";
+      else if (hNum == min) cell += " class='min'>";
 
       // Add availabilities
-      cell += "'>\n" + hDispo + "\t\t</td>\n";
+      cell += "\n" + hDispo + "\t\t</td>\n";
+      table += cell;
     }
     table += "\t</tr>";
   }
@@ -396,14 +413,14 @@ var resultsTable = function(sondage) {
  * @return {String} The HTML to for the legend
  */
 var getLegend = function(dispo) {
-  var html = "<ul>\n";
+  var html = "";
 
   for (var i = 0; i < dispo.length; i++) {
-    html += "\t<li style='background-color: " +
+    html += "<li style='background-color: " +
       genColour(i, dispo.length) + "'>" + dispo[i].nom + "</li>\n";
   }
 
-  return html + "</ul>";
+  return html;
 };
 
 
@@ -448,7 +465,7 @@ var genColour = function(i, nbTotal) {
   var hexCode = "#";
   for (var j = 0; j < couleur.length; j++) {
     var newBase = Math.floor(couleur[j] * 256); // (16^2)
-    hexCode += newBase.toString(16);
+    hexCode += newBase.toString(16).padStart(2, '0');
   }
 
   return hexCode;
