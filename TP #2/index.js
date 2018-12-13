@@ -240,8 +240,35 @@ var getCalendarTable = function(debut, fin, matin, soir) {
 //
 // Doit retourner false si le calendrier demandé n'existe pas
 var getResults = function(sondageId) {
-  // TODO
-  return 'Resultats du sondage <b>' + sondageId + '</b> (TODO)';
+  // On parcoure les dictionnaires afin de trouver le id du sondage
+  var titre, id, dateDebut, dateFin, heureDebut, heureFin;
+
+  for (var i = 0; i < memoire.length; i++) {
+    if (memoire[i].id == sondageId) {
+      titre = memoire[i].titre;
+      id = memoire[i].id + "";
+      dateDebut = memoire[i].dateDebut;
+      dateFin = memoire[i].dateFin;
+      heureDebut = memoire[i].heureDebut;
+      heureFin = memoire[i].heureFin;
+    }
+  }
+  
+  if(id != sondageId) return false; // coming back to it
+  // On collecte le fichier results.hmtl
+  var texte = readFile('template/results.html');
+  // On change les balises {{url}}
+  texte = varReplace(texte, "{{url}}", hostUrl + id);
+  // On change la balise {{titre}}
+  texte = varReplace(texte, "{{titre}}", titre);
+
+  // On affiche le tableau résultats
+  var table = getCalendarTable(dateDebut, dateFin, heureDebut, heureFin);
+  texte = varReplace(texte, "{{tableau}}", table);
+  // On affiche la légende des participants
+  var legende = getLegend(disponibilites);
+  texte = varReplace(texte,"{{legend}}",legende);
+
 };
 
 // Crée un sondage à partir des informations entrées
