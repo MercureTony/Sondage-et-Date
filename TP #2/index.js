@@ -272,21 +272,28 @@ var creerSondage = function(titre, id, dateDebut, dateFin,
   heureDebut, heureFin) {
 
   // Validité de l'id
-  if (!/[a-zA-Z0-9\-]+/.test(id)) {
+  if (!/^[a-zA-Z0-9\-]+$/.test(id)) {
     return false;
   }
 
-  //**On vérifie le bon agencement des dates et heures
-  if ((heureDebut > heureFin) && (dateDebut > dateFin) &&
-    (dateFin - dateDebut > 30)) {
+  var debut = new Date(dateDebut);
+  var fin = new Date(dateFin);
+
+  var temps = fin.getTime() - debut.getTime(); // ms
+
+  // Error if starting hour is greater than ending hour
+  //       if start date is after end date
+  //       if time is greater than 30 days
+  if (heureDebut > heureFin || temps < 0 || temps > MILLIS_PAR_JOUR * 30) {
     return false;
   }
-  //On crée un tableau contenant les informations relatives
+
+  // Add to the table if no errors
   memoire.push({
     titre: titre,
     id: id,
-    dateDebut: new Date(dateDebut),
-    dateFin: new Date(dateFin),
+    dateDebut: debut,
+    dateFin: fin,
     heureDebut: heureDebut,
     heureFin: heureFin,
     disponibilites: []
