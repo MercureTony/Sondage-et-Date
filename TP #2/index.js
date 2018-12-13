@@ -180,7 +180,7 @@ var getCalendar = function(sondageId) {
 
   // Get table
   var table = getCalendarTable(sondage);
-  texte = varReplace(texte, "{{tableau}}", table);
+  texte = varReplace(texte, "{{table}}", table);
 
   return texte;
 };
