@@ -272,8 +272,13 @@ var creerSondage = function(titre, id, dateDebut, dateFin,
 //
 // Cette fonction ne retourne rien
 var ajouterParticipant = function(sondageId, nom, disponibilites) {
-  memoire.disponibilite.push(nom);
-  memoire.disponibilite.push(disponibilites);
+ for (var i = 0; i < memoire.length; i++) {
+    if (memoire[i].id == sondageId) {
+      var id = memoire[i].id + "";
+      memoire[i].disponibilite.push(id);
+      memoire[i].disponibilite.push(nom);
+    }
+  }
 };
 
 // Génère la `i`ème couleur parmi un nombre total `total` au format
