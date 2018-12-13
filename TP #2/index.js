@@ -363,8 +363,8 @@ var resultsTable = function(sondage) {
     }
   }
 
-  var min = Math.min(dispoCounts);
-  var max = Math.max(dispoCounts);
+  var min = Math.min(...dispoCounts);
+  var max = Math.max(...dispoCounts);
 
   // Create rows for hours
   var hIndex = 0;
@@ -396,6 +396,7 @@ var resultsTable = function(sondage) {
       // Add cases to cell
       if (hNum == max) cell += " class='max'>";
       else if (hNum == min) cell += " class='min'>";
+      else cell += ">";
 
       // Add availabilities
       cell += "\n" + hDispo + "\t\t</td>\n";
