@@ -275,9 +275,9 @@ var ajouterParticipant = function(sondageId, nom, disponibilites) {
   for (var i = 0; i < memoire.length; i++) {
     if (memoire[i].id == sondageId) {
       memoire[i].disponibilite.push({
-        nom : nom ,
-        disponibilite : disponibilites 
-      })
+        nom: nom,
+        disponibilite: disponibilites 
+      });
     }
   }
 };
