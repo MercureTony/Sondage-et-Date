@@ -122,9 +122,9 @@ var getIndex = function(replacements) {
  * Memory array; contains all surveys from the session
  *
  * Each element of the array is an object:
- * {titre, id, dateDebut, dateFin, heureDebut, heureFin, disponibilite}
- * Elements of the disponibilite array are objects:
- * {nom, disponibilite}
+ * {titre, id, dateDebut, dateFin, heureDebut, heureFin, disponibilites}
+ * Elements of the disponibilites array are objects:
+ * {nom, disponibilites}
  */
 var memoire = [];
 
@@ -148,34 +148,37 @@ var mois = [
 
 var MILLIS_PAR_JOUR = (24 * 60 * 60 * 1000);
 
+/*
+ * Get the current survey
+ *
+ * @param {String} id The id of the survey to get
+ * @return {undefined|Object} false if not found, the survey object if exists
+ */
+var getSurvey = function(id) {
+  var sondage;
+
+  for (var i = 0; i < memoire.length; i++) {
+    if (memoire[i].id == id) sondage = memoire[i];
+  }
+};
+
 // Retourne le texte HTML à afficher à l'utilisateur pour répondre au
 // sondage demandé.
 //
 // Doit retourner false si le calendrier demandé n'existe pas
 var getCalendar = function(sondageId) {
 
-  // On parcoure les dictionnaires afin de trouver le id du sondage
-  var titre, id, dateDebut, dateFin, heureDebut, heureFin;
-
-  for (var i = 0; i < memoire.length; i++) {
-    if (memoire[i].id == sondageId) {
-      titre = memoire[i].titre;
-      id = memoire[i].id + "";
-      dateDebut = memoire[i].dateDebut;
-      dateFin = memoire[i].dateFin;
-      heureDebut = memoire[i].heureDebut;
-      heureFin = memoire[i].heureFin;
-    }
-  }
-
-  if (!id) return false;
+  var sondage = getSurvey(sondageId);
+  if (typeof sondage == 'undefined') return false;
 
   var texte = readFile('template/calendar.html');
-  texte = varReplace(texte, "{{titre}}", titre);
-  texte = varReplace(texte, "{{url}}", hostUrl + id);
+
+  // Replace placeholders
+  texte = varReplace(texte, "{{titre}}", sondage.titre);
+  texte = varReplace(texte, "{{url}}", hostUrl + sondage.id);
 
   // Get table
-  var table = getCalendarTable(dateDebut, dateFin, heureDebut, heureFin);
+  var table = getCalendarTable(sondage);
   texte = varReplace(texte, "{{tableau}}", table);
 
   return texte;
@@ -185,13 +188,15 @@ var getCalendar = function(sondageId) {
  * Create calendar table
  * For use in getCalendar()
  *
- * @param {Date} debut Start date
- * @param {Date} fin End date
- * @param {Int} matin Starting hour
- * @param {Int} soir Ending hour
+ * @param {Object} sondage The survey to present
  * @return {String} HTML table of calendar
  */
-var getCalendarTable = function(debut, fin, matin, soir) {
+var getCalendarTable = function(sondage) {
+
+  var debut = sondage.dateDebut,
+      fin = sondage.dateFin,
+      matin = sondage.heureDebut,
+      soir = sondage.heureFin;
 
   var table = `
 <table id="calendrier"
@@ -240,35 +245,23 @@ var getCalendarTable = function(debut, fin, matin, soir) {
 //
 // Doit retourner false si le calendrier demandé n'existe pas
 var getResults = function(sondageId) {
-  // On parcoure les dictionnaires afin de trouver le id du sondage
-  var titre, id, dateDebut, dateFin, heureDebut, heureFin;
 
-  for (var i = 0; i < memoire.length; i++) {
-    if (memoire[i].id == sondageId) {
-      titre = memoire[i].titre;
-      id = memoire[i].id + "";
-      dateDebut = memoire[i].dateDebut;
-      dateFin = memoire[i].dateFin;
-      heureDebut = memoire[i].heureDebut;
-      heureFin = memoire[i].heureFin;
-    }
-  }
-  
-  if(id != sondageId) return false; // coming back to it
-  // On collecte le fichier results.hmtl
+  var sondage = getSurvey(sondageId);
+  if (typeof sondage == 'undefined') return false;
+
   var texte = readFile('template/results.html');
-  // On change les balises {{url}}
-  texte = varReplace(texte, "{{url}}", hostUrl + id);
-  // On change la balise {{titre}}
-  texte = varReplace(texte, "{{titre}}", titre);
 
-  // On affiche le tableau résultats
-  var table = getCalendarTable(dateDebut, dateFin, heureDebut, heureFin);
+  // Replace placeholders
+  texte = varReplace(texte, "{{url}}", hostUrl + sondage.id);
+  texte = varReplace(texte, "{{titre}}", sondage.titre);
+
+  var table = resultsTable(sondage);
   texte = varReplace(texte, "{{tableau}}", table);
-  // On affiche la légende des participants
-  var legende = getLegend(disponibilites);
+
+  var legende = getLegend(sondage.disponibilites);
   texte = varReplace(texte,"{{legend}}",legende);
 
+  return texte;
 };
 
 // Crée un sondage à partir des informations entrées
@@ -296,7 +289,7 @@ var creerSondage = function(titre, id, dateDebut, dateFin,
     dateFin: new Date(dateFin),
     heureDebut: heureDebut,
     heureFin: heureFin,
-    disponibilite: []
+    disponibilites: []
   });
 
   return true;
@@ -310,9 +303,9 @@ var creerSondage = function(titre, id, dateDebut, dateFin,
 var ajouterParticipant = function(sondageId, nom, disponibilites) {
   for (var i = 0; i < memoire.length; i++) {
     if (memoire[i].id == sondageId) {
-      memoire[i].disponibilite.push({
+      memoire[i].disponibilites.push({
         nom: nom,
-        disponibilite: disponibilites 
+        disponibilites: disponibilites 
       });
     }
   }
@@ -325,7 +318,7 @@ var ajouterParticipant = function(sondageId, nom, disponibilites) {
  * @return {String} HTML table displaying the results
  */
 var resultsTable = function(sondage) {
-  var dispo = sondage.disponibilite;
+  var dispo = sondage.disponibilites;
 
   var table = "<table>\n\t<tr>\n\t\t<th></th>\n";
 
@@ -338,11 +331,11 @@ var resultsTable = function(sondage) {
   }
 
   // Get counts of availabilities
-  var dispoCounts = new Array(dispo[0].disponibilite.length);
+  var dispoCounts = new Array(dispo[0].disponibilites.length);
   for (var i = 0; i < dispo.length; i++) {
-    for (var c = 0; c < dispo[i].disponibilite.length; c++) {
+    for (var c = 0; c < dispo[i].disponibilites.length; c++) {
       if (typeof dispoCounts[c] == "undefined") dispoCounts[c] = 0;
-      if (dispo[i].disponibilite.charAt(c) == '1') dispoCounts[c]++;
+      if (dispo[i].disponibilites.charAt(c) == '1') dispoCounts[c]++;
     }
   }
 
@@ -368,7 +361,7 @@ var resultsTable = function(sondage) {
         var couleur = genColour(p, dispo.length);
 
         // Make coloured cases
-        if (dispo[p].disponibilite.charAt(hIndex) == "1") {
+        if (dispo[p].disponibilites.charAt(hIndex) == "1") {
           hDispo += "\t\t\t<span style='background-color: " +
             couleur + "; color:" + couleur + "'>.</span>\n";
           hNum++;
