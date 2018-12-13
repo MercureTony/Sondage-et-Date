@@ -119,7 +119,17 @@ var getIndex = function(replacements) {
 // --- À compléter ---
 
 /*
- * Replace-all on a string - uses global Regex
+ * Memory array; contains all surveys from the session
+ *
+ * Each element of the array is an object:
+ * {titre, id, dateDebut, dateFin, heureDebut, heureFin, disponibilite}
+ * Elements of the disponibilite array are objects:
+ * {nom, disponibilite}
+ */
+var memoire = [];
+
+/*
+ * Replace-all on a string - uses global regular expressions
  * Meant for variables in HTML templates
  *
  * @param {String} text The text to search through
@@ -207,17 +217,18 @@ var getCalendarTable = function(debut, fin, matin, soir) {
   // Add hour cells
   var nbHeures = soir - matin + 1;
   for (var h = 0; h < nbHeures; h++) {
-    table += "\t<tr>\n\t\t<th>" + h + "h</th>\n"; // Heure
+    var current = h + matin;
+    table += "\t<tr>\n\t\t<th>" + current + "h</th>\n";
 
     for (var c = 0; c < nbDays; c++) {
-      table += "\t\t<td id='" + c + "-" + h + "'></td>\n";
+      table += "\t\t<td id='" + c + "-" + h + "'></td>\n"; // Index date-hour
     }
     table += "\t</tr>\n";
   }
 
   table += "</table>";
 
-  // Mettre les bons variables comme attributs
+  // Replace placeholders for day/hour indexes
   table = table.replace("{{nbJours}}", nbDays);
   table = table.replace("{{nbHeures}}", nbHeures);
 
@@ -232,8 +243,6 @@ var getResults = function(sondageId) {
   // TODO
   return 'Resultats du sondage <b>' + sondageId + '</b> (TODO)';
 };
-
-var memoire = [];
 
 // Crée un sondage à partir des informations entrées
 //
@@ -260,7 +269,7 @@ var creerSondage = function(titre, id, dateDebut, dateFin,
     dateFin: new Date(dateFin),
     heureDebut: heureDebut,
     heureFin: heureFin,
-    disponibilite : []
+    disponibilite: []
   });
 
   return true;
