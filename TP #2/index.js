@@ -160,6 +160,7 @@ var getSurvey = function(id) {
   for (var i = 0; i < memoire.length; i++) {
     if (memoire[i].id == id) sondage = memoire[i];
   }
+  return sondage;
 };
 
 // Retourne le texte HTML à afficher à l'utilisateur pour répondre au
