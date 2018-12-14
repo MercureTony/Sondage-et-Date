@@ -225,14 +225,8 @@ var getCalendarTable = function(sondage) {
       matin = sondage.heureDebut,
       soir = sondage.heureFin;
 
-  var table = `
-<table id="calendrier"
-\tdata-nbjours="{{nbJours}}"
-\tdata-nbheures="{{nbHeures}}">
-\t<!-- En-tête -->
-\t<tr>
-\t\t<th></th>
-`;
+  var table = '<table id="calendrier"\n\tdata-nbjours="{{nbJours}}"' +
+    '\n\tdata-nbheures="{{nbHeures}}">\n\t<tr>\n\t\t<th></th>';
 
   var nbDays = (fin.getTime() - debut.getTime()) / MILLIS_PAR_JOUR;
   table += makeDateCols(debut, fin);
@@ -363,8 +357,9 @@ var resultsTable = function(sondage) {
     }
   }
 
-  var min = Math.min(...dispoCounts);
-  var max = Math.max(...dispoCounts);
+  // Documentation de .apply par https://goo.gl/Gk8hoy
+  var min = Math.min.apply(null, dispoCounts);
+  var max = Math.max.apply(null, dispoCounts);
 
   // Create rows for hours
   var hIndex = 0;
