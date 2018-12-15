@@ -66,30 +66,30 @@
             <label>
                 Heure de début:
                 <select name="heureDebut">
-                    <option value="0">0h</option>
-                    <option value="1">1h</option>
-                    <option value="2">2h</option>
-                    <option value="3">3h</option>
-                    <option value="4">4h</option>
-                    <option value="5">5h</option>
-                    <option value="6">6h</option>
-                    <option value="7" selected>7h</option>
-                    <option value="8">8h</option>
-                    <option value="9">9h</option>
-                    <option value="10">10h</option>
-                    <option value="11">11h</option>
-                    <option value="12">12h</option>
-                    <option value="13">13h</option>
-                    <option value="14">14h</option>
-                    <option value="15">15h</option>
-                    <option value="16">16h</option>
-                    <option value="17">17h</option>
-                    <option value="18">18h</option>
-                    <option value="19">19h</option>
-                    <option value="20">20h</option>
-                    <option value="21">21h</option>
-                    <option value="22">22h</option>
-                    <option value="23">23h</option>
+                    <option value="0" class="heureDebut">0h</option>
+                    <option value="1" class="heureDebut">1h</option>
+                    <option value="2" class="heureDebut">2h</option>
+                    <option value="3" class="heureDebut">3h</option>
+                    <option value="4" class="heureDebut">4h</option>
+                    <option value="5" class="heureDebut">5h</option>
+                    <option value="6" class="heureDebut">6h</option>
+                    <option value="7" class="heureDebut" selected>7h</option>
+                    <option value="8" class="heureDebut">8h</option>
+                    <option value="9" class="heureDebut">9h</option>
+                    <option value="10" class="heureDebut">10h</option>
+                    <option value="11" class="heureDebut">11h</option>
+                    <option value="12" class="heureDebut">12h</option>
+                    <option value="13" class="heureDebut">13h</option>
+                    <option value="14" class="heureDebut">14h</option>
+                    <option value="15" class="heureDebut">15h</option>
+                    <option value="16" class="heureDebut">16h</option>
+                    <option value="17" class="heureDebut">17h</option>
+                    <option value="18" class="heureDebut">18h</option>
+                    <option value="19" class="heureDebut">19h</option>
+                    <option value="20" class="heureDebut">20h</option>
+                    <option value="21" class="heureDebut">21h</option>
+                    <option value="22" class="heureDebut">22h</option>
+                    <option value="23" class="heureDebut">23h</option>
                 </select>
             </label>
 
@@ -98,34 +98,38 @@
             <label>
                 Heure de fin:
                 <select name="heureFin">
-                    <option value="0">0h</option>
-                    <option value="1">1h</option>
-                    <option value="2">2h</option>
-                    <option value="3">3h</option>
-                    <option value="4">4h</option>
-                    <option value="5">5h</option>
-                    <option value="6">6h</option>
-                    <option value="7">7h</option>
-                    <option value="8">8h</option>
-                    <option value="9">9h</option>
-                    <option value="10">10h</option>
-                    <option value="11">11h</option>
-                    <option value="12">12h</option>
-                    <option value="13">13h</option>
-                    <option value="14">14h</option>
-                    <option value="15">15h</option>
-                    <option value="16">16h</option>
-                    <option value="17" selected>17h</option>
-                    <option value="18">18h</option>
-                    <option value="19">19h</option>
-                    <option value="20">20h</option>
-                    <option value="21">21h</option>
-                    <option value="22">22h</option>
-                    <option value="23">23h</option>
+                    <option value="0" class="heureFin">0h</option>
+                    <option value="1" class="heureFin">1h</option>
+                    <option value="2" class="heureFin">2h</option>
+                    <option value="3" class="heureFin">3h</option>
+                    <option value="4" class="heureFin">4h</option>
+                    <option value="5" class="heureFin">5h</option>
+                    <option value="6" class="heureFin">6h</option>
+                    <option value="7" class="heureFin">7h</option>
+                    <option value="8" class="heureFin">8h</option>
+                    <option value="9" class="heureFin">9h</option>
+                    <option value="10" class="heureFin">10h</option>
+                    <option value="11" class="heureFin">11h</option>
+                    <option value="12" class="heureFin">12h</option>
+                    <option value="13" class="heureFin">13h</option>
+                    <option value="14" class="heureFin">14h</option>
+                    <option value="15" class="heureFin">15h</option>
+                    <option value="16" class="heureFin">16h</option>
+                    <option value="17" class="heureFin" selected>17h</option>
+                    <option value="18" class="heureFin">18h</option>
+                    <option value="19" class="heureFin">19h</option>
+                    <option value="20" class="heureFin">20h</option>
+                    <option value="21" class="heureFin">21h</option>
+                    <option value="22" class="heureFin">22h</option>
+                    <option value="23" class="heureFin">23h</option>
                 </select>
             </label>
 
             <hr />
+              <script type="text/javascript">
+              //Message d'erreur
+              var valueId = document.getElementById("id");
+              </script>
 
             <button type="submit">
                 Créer !
@@ -133,8 +137,44 @@
         </form>
         <script>
             document.addEventListener('DOMContentLoaded', function() {
+                var text = "";
+                var dateDebut = document.getElementById('debut').value;
+                var dateFin = document.getElementById('fin').value;
+                var heureDebut = document.getElementsByClassName('heureDebut').value;
+                var heureFin = document.getElementsByClassName('heureFin').value;
+
                 if(location.search == '') {
-                    document.getElementById('error').style.display = 'none';
+                  document.getElementById('error').style.display = 'none';
+                }
+                else if (dateFin < dateDebut) {
+                  text = "Erreur Planning : Vous devriez choisir une date "
+                  + "ultérieure à celle du début";
+                  document.getElementById('error').innerHTML = text;
+                  document.getElementById('error').style.display = 'block';
+                }
+                else if (!(/^[a-z0-9\-]+$/i.test(location.search))) {
+                  text = "Erreur Identifiant : Les caractères spéciaux "
+                  + "sont pas autorisés";
+                  document.getElementById('error').innerHTML = text;
+                  document.getElementById('error').style.display = 'block';
+                }
+                else if ((dateFin - dateDebut) > 30) {
+                  text = "Erreur Planning : Vous sondage doit être de 30 jours"
+                  + " maximum";
+                  document.getElementById('error').innerHTML = text;
+                  document.getElementById('error').style.display = 'block';
+                }
+                else if (dateFin < dateDebut) {
+                  text = "Erreur Planning : Vous devriez choisir une date "
+                  + "ultérieure à celle du début";
+                  document.getElementById('error').innerHTML = text;
+                  document.getElementById('error').style.display = 'block';
+                }
+                else if (heureFin < heureDebut) {
+                  text = "Erreur Planning : Vous devriez choisir une heure "
+                  + "ultérieure à celle du début";
+                  document.getElementById('error').innerHTML = text;
+                  document.getElementById('error').style.display = 'block';
                 }
             });
         </script>
