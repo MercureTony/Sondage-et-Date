@@ -118,6 +118,9 @@ var getIndex = function(replacements) {
 
 // --- À compléter ---
 
+//Author : Etienne Beaulé
+//Author : Anthony Uyende
+
 /*
  * Memory array; contains all surveys from the session
  *
