@@ -43,7 +43,7 @@
 
             <label>
                 Identifiant:
-                <input name="id" placeholder="super-sondage" />
+                <input name="id" placeholder="super-sondage" id="identifiant"/>
                 <attr id="note-identifiant" title="L'identifiant du sondage sera utilisé dans le lien. Il doit être composé seulement de chiffres, de lettres et de tirets (-)">(?)</attr>
             </label>
 
@@ -139,14 +139,16 @@
                 var dateFin = document.getElementById('fin').value;
                 dateFin = new Date(dateFin);
                 dateFin = dateFin.getTime();
-                var heureDebut = +(document.getElementsByClassName('heureDebut').value);
-                var heureFin = +(document.getElementsByClassName('heureFin').value);
+                var hDebut = document.getElementsByClassName('heureDebut')
+                var heureDebut = +(hDebut.value);
+                var hFin = document.getElementsByClassName('heureFin')
+                var heureFin = +(hFin.value);
 
                 if(location.search == '') {
                   document.getElementById('error').style.display = 'none';
                 }
                 else {
-                  var id = document.getElementById('id').value;
+                  var id = document.getElementById('identifiant').value;
                   if (dateFin < dateDebut) {
                     text = "Erreur Planning : Vous devriez choisir une date "
                     + "ultérieure à celle du début";
