@@ -151,25 +151,25 @@
                   var id = document.getElementById('identifiant').value;
                   if (dateFin < dateDebut) {
                     text = "Erreur Planning : Vous devriez choisir une date "
-                    + "ultérieure à celle du début";
+                    +"ultérieure à celle du début";
                     document.getElementById('error').innerHTML = text;
                     document.getElementById('error').style.display = 'block';
                   }
                   else if (!(/^[a-z0-9\-]+$/i.test(id))) {
                     text = "Erreur Identifiant : Les caractères spéciaux "
-                    + "sont pas autorisés";
+                    +"sont pas autorisés";
                     document.getElementById('error').innerHTML = text;
                     document.getElementById('error').style.display = 'block';
                   }
                   else if ((dateFin - dateDebut) > 30) {
-                    text = "Erreur Planning : Vous sondage doit être de 30 jours"
-                    + " maximum";
+                    text = "Erreur Planning : Votre sondage doit être de 30 "
+                    +"jours maximum";
                     document.getElementById('error').innerHTML = text;
                     document.getElementById('error').style.display = 'block';
                   }
                   else if (heureFin < heureDebut) {
-                    text = "Erreur Planning : Vous devriez choisir une heure "
-                    + "ultérieure à celle du début";
+                    text = "Erreur Planning : Vous devriez choisir une heure"
+                    +"ultérieure à celle du début";
                     document.getElementById('error').innerHTML = text;
                     document.getElementById('error').style.display = 'block';
                   }
