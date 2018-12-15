@@ -165,12 +165,6 @@
                     document.getElementById('error').innerHTML = text;
                     document.getElementById('error').style.display = 'block';
                   }
-                  else if (dateFin < dateDebut) {
-                    text = "Erreur Planning : Vous devriez choisir une date "
-                    + "ultérieure à celle du début";
-                    document.getElementById('error').innerHTML = text;
-                    document.getElementById('error').style.display = 'block';
-                  }
                   else if (heureFin < heureDebut) {
                     text = "Erreur Planning : Vous devriez choisir une heure "
                     + "ultérieure à celle du début";
